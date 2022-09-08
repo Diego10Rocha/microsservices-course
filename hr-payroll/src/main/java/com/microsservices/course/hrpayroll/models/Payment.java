@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Payment implements Serializable {
     private static final long serialVersionUID = 1L;

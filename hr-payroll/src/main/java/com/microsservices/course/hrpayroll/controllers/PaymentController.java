@@ -20,7 +20,12 @@ public class PaymentController {
     @GetMapping("/{workerId}/days/{days}")
     public ResponseEntity<Payment> getPayment(@PathVariable Long workerId,
                                               @PathVariable Integer days) {
-        Payment payment = paymentService.getPayment(workerId, days);
+        Payment payment = null;
+        try {
+            payment = paymentService.getPayment(workerId, days);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
         return ResponseEntity.ok(payment);
     }
 }
