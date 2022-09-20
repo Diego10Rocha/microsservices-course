@@ -1,31 +1,22 @@
 package com.microsservices.course.hrpayroll.services;
 
+import com.microsservices.course.hrpayroll.feignclients.WorkerFeignClient;
 import com.microsservices.course.hrpayroll.models.Payment;
 import com.microsservices.course.hrpayroll.models.Worker;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class PaymentService {
 
-    private final RestTemplate restTemplate;
+    private final WorkerFeignClient workerFeignClient;
 
-    @Value("${hr-worker.host}")
-    private String workerHost;
-
-    public PaymentService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public PaymentService(WorkerFeignClient workerFeignClient) {
+        this.workerFeignClient = workerFeignClient;
     }
 
+
     public Payment getPayment(long workerId, int days) throws Exception {
-        Map<String, String> uriVariables = new HashMap<>();
-        uriVariables.put("id", "" + workerId);
-        String url = String.format("%s/workers/{id}", workerHost);
-        Worker worker = restTemplate.getForObject(url, Worker.class, uriVariables);
+        Worker worker = workerFeignClient.findById(workerId).getBody();
         if (worker == null) {
             throw new Exception("worker not found!");
         }
